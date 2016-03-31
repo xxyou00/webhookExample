@@ -117,6 +117,8 @@ def makeWebhookResult(data):
         ]
     }
 
+    print(json.dumps(slack_message))
+
     return {
         "speech": speech,
         "displayText": speech,
