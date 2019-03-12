@@ -32,13 +32,13 @@ def processRequest(req):
     if req.get("result").get("action") != "yahooWeatherForecast":
         return {}
     baseurl = "https://query.yahooapis.com/v1/public/yql?"
-    yql_query = makeYqlQuery(req)
-    if yql_query is None:
-        return {}
-    yql_url = baseurl + urllib.urlencode({'q': yql_query}) + "&format=json"
-    print(yql_url)
+#    yql_query = makeYqlQuery(req)
+#    if yql_query is None:
+#        return {}
+#    yql_url = baseurl + urllib.urlencode({'q': yql_query}) + "&format=json"
+#    print(yql_url)
 
-    result = urllib.urlopen(yql_url).read()
+    result = req.get("result").get("parameters").get("geo-city")
     print("yql result: ")
     print(result)
 
