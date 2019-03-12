@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 
-import urllib
-import json
 import os
+from datetime import datetime, timedelta
+from flask import Flask, request, abort, jsonify
 
-from flask import Flask
-from flask import request
-from flask import make_response
+def temp_token():
+    import binascii
+    temp_token = binascii.hexlify(os.urandom(24))
+    return temp_token.decode('utf-8')
 
-# Flask app should start in global layout
+WEBHOOK_VERIFY_TOKEN = os.getenv('WEBHOOK_VERIFY_TOKEN')
+CLIENT_AUTH_TIMEOUT = 24 # in Hours
+
 app = Flask(__name__)
+
+authorised_clients = {}
 
 
 @app.route('/webhook', methods=['GET', 'POST'])
@@ -39,7 +44,11 @@ def webhook():
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-
+    if WEBHOOK_VERIFY_TOKEN is None:
+        print('WEBHOOK_VERIFY_TOKEN has not been set in the environment.\nGenerating random token...')
+        token = temp_token()
+        print('Token: %s' % token)
+        WEBHOOK_VERIFY_TOKEN = token
     print("Starting app on port %d" % (port))
 
     app.run(debug=False, port=port, host='0.0.0.0')
